@@ -1,153 +1,237 @@
-let favoriteCityId = "Rome";
+// Créer une variable
+// var, let, const
+// un préféré ?
+// >> var : le mal aimé, le vieux, l'ancien
+// let ou const
+// un préféré
+// let ++++
+// const - (import de fichiers)
+// Team const <= moi
+// => pour éviter les réaffectations
+// => en Java : final
+
+// let
+
+let favoriteCityId = "rome";
 console.log(favoriteCityId);
-favoriteCityId = "Paris";
+favoriteCityId = "paris";
 console.log(favoriteCityId);
 
-let citiesId = ["paris", "nyc", "rome", "rio-de-janeiro"];
+// const
+
+const citiesId = ["paris", "nyc", "rome", "rio-de-janeiro"];
+// citiesId = []; // réaffectation interdite
 console.log(citiesId);
-// impossible constante variable
-//citiesId = [];
-citiesId.push("tokyo");
+citiesId.push("tokyo"); // modification est permise
 console.log(citiesId);
+
+// Création d'objet
 
 function getWeather(cityId) {
-    
-    let city = cityId;
+    let city = cityId.toUpperCase();
     let temperature = 20;
-    let obj = {
-        city:city,
-        temperature:temperature
+    // return {city: city, temperature: temperature};
+    return {
+        city,
+        temperature
     };
-    return obj;
-    
 }
-console.log(getWeather("PARIS"));
 
-const weather = {city:"PARIS",temperature:20};
-const {city,temperature} = weather;
+const weather = getWeather("paris");
+console.log(weather); // { city: 'PARIS', temperature: 20 }
+
+// Affectation destructurée
+
+let {
+    city,
+    temperature
+} = weather;
+// let {city: city2, temperature: temperature2} = weather;
+// console.log(city2);
+
 console.log(city);
 console.log(temperature);
-const [parisId, nycId, othersCitiesId] = [citiesId[0], citiesId[1],"3"];
+
+// Rest operator
+
+const [parisId, nycId, ...othersCitiesId] = citiesId;
+
+
 console.log(parisId);
 console.log(nycId);
-console.log(othersCitiesId);
+console.log(othersCitiesId.length);
 
+// Classe 
 class Trip {
-    constructor(id, name, imageUrl,price){
+    constructor(id, name, imageUrl) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
-        this.price = price;
-        let _price;
-        
-    }
-    
-    toString(){
-        console.log(`Trip [${this.id}, ${this.name}, ${this.imageUrl}, ${this._price}]`);
     }
 
-    set price(price){
+    // Pas comme en Java
+    // getPrice() {
+    //     return this._price;
+    // }
+
+    get price() {
+        return this._price;
+    }
+
+    set price(price) {
         this._price = price;
     }
 
-    get price() {
-        this._price = this.price;
+    toString() {
+        return "Trip [" + this.id + ", " + this.name + ", " + this.imageUrl + ", " + this.price + "]";
     }
 
     static getDefaultTrip() {
-        let defaultInstance = {
-            id: "rio-de-janeiro",
-            name: "Rio de Janeiro",
-            imageUrl: "img/rio-de-janeiro.jpg"
-        }
-        return defaultInstance
+        return new Trip("rio-de-janeiro", "Paris", "img / paris.jpg");
     }
 }
 
-const parisTrip = new Trip("paris", "Paris", "img/paris.jpg");
-console.log(parisTrip);
-console.log(parisTrip.name);
-parisTrip.price = 100;
-parisTrip.toString();
+const parisIdObject = new Trip("paris", "Paris", "img / paris.jpg");
+console.log(parisIdObject);
+console.log(parisIdObject.name);
+
+parisIdObject.price = 100; // set
+
+console.log(parisIdObject.toString());
 
 const defaultTrip = Trip.getDefaultTrip();
-console.log(defaultTrip);
 
-class FreeTrip extends Trip{
-    constructor(id, name, imageUrl,price) {
-        super(id,name,imageUrl,price = 0);
-        
-    }
+console.log(defaultTrip.toString());
+
+// Héritage
+
+class FreeTrip extends Trip {
+    price = 0;
 
     toString() {
-        
-        console.log(`FreeTrip [${this.id}, ${this.name}, ${this.imageUrl}, ${this._price}]`);
-    
+        return "Free" + super.toString()
     }
 }
-const freeTrip = new FreeTrip("nantes","Nantes","img/nantes.jpg");
-freeTrip.toString();
 
- class TripService {
-     constructor() {
-         // TODO Set of 3 trips
-        
-         this.obj1 = new Trip('paris', 'Paris', 'img/paris.jpg');
-         this.obj2 = new Trip('nantes', 'Nantes', 'img/nantes.jpg')
-         this.obj3 = new Trip('rio-de-janeiro', 'Rio de Janeiro', 'img/rio-de-janeiro.jpg')
-     }
-     
-     findByName(tripName) {
-         return new Promise((resolve, reject) => {
-             setTimeout(() => {
-                 // ici l'exécution du code est asynchrone
-                 // TODO utiliser resolve et reject en fonction du résultat de la
-                 
-                 switch (tripName) {
-                     case this.obj1.name:
-                         resolve(this.obj1)
-                         break;
-                     case this.obj2.name:
-                         resolve(this.obj2)
-                     break;
-                 
-                     case this.obj3.name:
-                         resolve(this.obj3)
-                     break;
-                     default:
-                         
-                         reject(new Error("No trip with name " + tripName))
-                         break;
-                 }
-             }, 2000)
-         });
-     }
- }
- class PriceService {
-     constructor(id_voyage,prix) {
-         
-         // créer
-         let price = new Map();
-         // alimenter
-         price.set(1, {cle: this.id_voyage = id_voyage});
-         price.set(2, {valeur:this.prix = prix});
-         
-         
-     }
-     findPriceByTripId(tripId) {
-         
-         
+const freeTrip = new FreeTrip("nantes", "Nantes", "img/nantes.jpg");
+
+console.log(freeTrip.toString());
+
+// Promise, Set, Map, Arrow Function
+
+class TripService {
+
+
+    constructor() {
+        // TODO Set of 3 trips
+        const paris = new Trip('paris', 'Paris', 'img/paris.jpg');
+        const nantes = new Trip('nantes', 'Nantes', 'img/nantes.jpg');
+        const rio = new Trip('rio-de-janeiro', 'Rio de Janeiro', 'img/rio-de-janeiro.jpg');
+        this.tripServiceSet = new Set([paris, nantes, rio]);
+        // this.tripServiceSet.add(paris);
+        // this.tripServiceSet.add(nantes);
+        // this.tripServiceSet.add(rio);
+    }
+
+    // name -> trip
+    findByName(tripName) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // ici l'exécution du code est asynchrone
+                // TODO utiliser resolve et reject en fonction du résultat de la recherche
+                for (const trip of this.tripServiceSet) {
+                    if (trip.name === tripName) {
+                        resolve(trip)
+                    }
+                }
+                // this.tripServiceSet.forEach(element => {
+                //     if (element.name === tripName) {
+                //         resolve(element.id)
+                //     }
+                // });
+
+                reject("No trip with name " + tripName)
+            }, 2000);
+        });
     }
 }
-     
-    
-    let testTripService = new TripService(parisTrip, defaultTrip, freeTrip);
-    console.log(testTripService);
 
-    testTripService.findByName("paris")
+class PriceService {
 
-    let paris = new PriceService("PARIS",40);
-    console.log(paris);
+    constructor() {
+        // TODO Map of 2 trips
+        // 'paris' --> price = 100
+        // 'rio-de-janeiro' --> price = 800)
+        // no price for 'nantes'
+        this.tripServiceMap = new Map();
+        this.tripServiceMap.set("paris", 100)
+        this.tripServiceMap.set("rio-de-janeiro", 800)
+    }
 
-    let rio = new PriceService("RIO", 140);
-    console.log(rio);
+    findPriceByTripId(tripId) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // ici l'exécution du code est asynchrone
+                // TODO utiliser resolve et reject en fonction du résultat de
+                //la recherche
+                if (this.tripServiceMap.has(tripId)) {
+                    resolve(this.tripServiceMap.get(tripId))
+                } else {
+                    reject("No price for trip id " + tripId)
+                }
+            }, 2000)
+        });
+    }
+}
+
+const tripservice = new TripService();
+const priceservice = new PriceService();
+
+tripservice.findByName("Paris")
+    .then(tripTrouve => console.log('Trip found ', tripTrouve))
+    .catch((err) => console.log(err))
+
+tripservice.findByName("Toulouse")
+    .then(tripTrouve => console.log('Trip found: ', tripTrouve))
+    .catch((err) => console.log(err))
+
+tripservice.findByName("Rio de Janeiro")
+    .then(tripTrouve => priceservice.findPriceByTripId(tripTrouve.id))
+    .then(price => console.log('Price found:', price))
+    .catch(error => console.log(error));
+
+tripservice.findByName("Nantes")
+    .then(tripTrouve => priceservice.findPriceByTripId(tripTrouve.id))
+    .then(price => console.log('Price found:', price))
+    .catch(error => console.log(error));
+
+// let promise1 = tripservice.findByName("Nantes");
+// console.log(promise1);
+// promise1
+//     .then(trip => {
+//     // ok
+// }).catch(error => {
+//    // ko
+// });
+
+tripservice.findByName("Nantes")
+    .then(function (tripTrouve) {
+        return priceservice.findPriceByTripId(tripTrouve.id);
+    })
+    .then(price => console.log('Price found:', price))
+    .catch(error => console.log(error));
+//
+// const resultat = fetch();
+//
+// // callback hell
+// fetch(resultat => {
+//     fetch(resultat => {
+//         fetch(resultat => {
+//             fetch(resultat => {
+//                 fetch(resultat => {
+//
+//                 });
+//             });
+//         });
+//     });
+// });
